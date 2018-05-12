@@ -1,8 +1,10 @@
 package main
 
 import (
-	"database/sql"
+	//"database/sql"
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/postgres"
@@ -13,11 +15,11 @@ import (
 )
 
 type Recipe struct {
-	ID           int
-	Title        string
-	Added        string
-	Blog         string
-	Instructions string
+	ID           int    `db: "id"`
+	Title        string `db: "title"`
+	Added        string `db: "added"`
+	Blog         string `db: "blog_id"`
+	Instructions string `db: "instructions_id"`
 }
 
 func InitializeDBMigration() {
@@ -27,7 +29,7 @@ func InitializeDBMigration() {
 	}
 	defer db.Close()
 
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	driver, err := postgres.WithInstance(db.DB, &postgres.Config{})
 	if err != nil {
 		slog.PrintError("Driver error: ", err)
 	}
@@ -43,19 +45,23 @@ func InitializeDBMigration() {
 }
 
 func bulkInsertRecipes(unsavedRows []Recipe) error {
-	db := getDbConnection()
+	db, connErr := getDbConnection()
+	if connErr != nil {
+		slog.PrintError("could not connect to database: ", connErr)
+	}
 	defer db.Close()
 
 	valueStrings := make([]string, 0, len(unsavedRows))
 	valueArgs := make([]interface{}, 0, len(unsavedRows)*4)
+	i := 0
 	for _, post := range unsavedRows {
-		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d)", i*4+1, i*4+2, i*4+3))
+		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d, $%d)", i*4+1, i*4+2, i*4+3, i*4+4))
 		valueArgs = append(valueArgs, post.Title)
 		valueArgs = append(valueArgs, post.Added)
 		valueArgs = append(valueArgs, post.Blog)
 		valueArgs = append(valueArgs, post.Instructions)
 	}
-	stmt := fmt.Sprintf("INSERT INTO recipes (title, added, blog_id, instrutions_id) VALUES %s", strings.Join(valueStrings, ","))
+	stmt := fmt.Sprintf("INSERT INTO recipes (title, added, blog_id, instructions_id) VALUES %s", strings.Join(valueStrings, ","))
 	_, err := db.Exec(stmt, valueArgs...)
 	return err
 }
@@ -63,6 +69,8 @@ func bulkInsertRecipes(unsavedRows []Recipe) error {
 func getDbConnection() (*sqlx.DB, error) {
 	//Connect to database
 	db, err := sqlx.Connect("postgres", "postgres://"+Conf.DatabaseConf.User+":"+Conf.DatabaseConf.Password+"@"+Conf.DatabaseConf.Host+":"+strconv.Itoa(Conf.DatabaseConf.Port)+"/"+Conf.DatabaseConf.DatabaseName+"?sslmode=disable")
+
+	//user=Conf.DatabaseConf.User pass=Conf.DatabaseConf.Password dbname=bar sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
