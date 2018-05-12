@@ -1,38 +1,35 @@
 package main
 
 import (
-	"log"
 	"fmt"
-	"strconv"
-	"net/http"
 	"github.com/gorilla/mux"
 	"github.com/olling/slog"
+	"log"
+	"net/http"
+	"strconv"
 )
 
 func InitializeApi() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api",handler)
-	r.HandleFunc("/api/recipes",handlerRecipes).Methods("GET","POST")
+	r.HandleFunc("/api", handler)
+	r.HandleFunc("/api/recipes", handlerRecipes).Methods("GET", "POST")
 	r.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET")
 
-
 	// Bind to a port and pass our router in
-	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(Conf.ApiPort), r))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(Conf.ApiPort), r))
 }
-
-
 
 func handlerRecipesID(w http.ResponseWriter, r *http.Request) {
 	sid := mux.Vars(r)["id"]
-	id,err := strconv.Atoi(sid)
+	id, err := strconv.Atoi(sid)
 
 	if err != nil {
 		http.Error(w, "Could not read API input (needed ID)", 400)
 		return
 	}
 
-	handleGetRecipes(w,r,id)
+	handleGetRecipes(w, r, id)
 }
 
 func handlerRecipes(w http.ResponseWriter, r *http.Request) {
@@ -47,36 +44,40 @@ func handlerRecipes(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		handleGetRecipes(w,r,irecipe.ID)
+		handleGetRecipes(w, r, irecipe.ID)
 
 	case "POST":
-		fmt.Fprint(w,"POST")
+		//fmt.Fprint(w, "POST")
 		var recipe Recipe
 		err := FromJsonReader(r.Body, &recipe)
 		defer r.Body.Close()
 		if err != nil {
-			slog.PrintError("Error decoding API input",err)
+			slog.PrintError("Error decoding API input", err)
 		}
-		slog.PrintDebug(recipe)
+		err = bulkInsertRecipes([]Recipe{recipe})
+		if err != nil {
+			http.Error(w, "Error occured while adding recipe", 500)
+			slog.PrintError("Error adding recipe to database:", err)
+		}
 	}
 }
 
 func handleGetRecipes(w http.ResponseWriter, r *http.Request, ID int) {
-	//TODO Get recipe
-	var recipe Recipe
-	recipe.ID=1338
-	recipe.Title="Got me"
-	output,err := ToJson(recipe)
+	recipe, err := getRecipeByID(ID)
+	if err != nil {
+		http.Error(w, "Recipe not found", 404)
+		slog.PrintError("Error retrieving recipe with id="+ID+":", err)
+	}
+	output, err := ToJson(recipe)
 
 	if err != nil {
 		slog.PrintError("Error converting recipe to json", err)
 		return
 	}
 
-	fmt.Fprint(w,output)
+	fmt.Fprint(w, output)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w,"Running")
+	fmt.Fprint(w, "Running")
 }
-

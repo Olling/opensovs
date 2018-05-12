@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"database/sql"
 	"fmt"
 	"strconv"
 	"strings"
@@ -15,11 +14,11 @@ import (
 )
 
 type Recipe struct {
-	ID           int    `db: "id"`
-	Title        string `db: "title"`
-	Added        string `db: "added"`
-	Blog         string `db: "blog_id"`
-	Instructions string `db: "instructions_id"`
+	ID           int    `db:"id"`
+	Title        string `db:"title"`
+	Added        string `db:"added"`
+	Blog         string `db:"blog_id"`
+	Instructions string `db:"instructions_id"`
 }
 
 func InitializeDBMigration() {
@@ -66,11 +65,24 @@ func bulkInsertRecipes(unsavedRows []Recipe) error {
 	return err
 }
 
+func getRecipeByID(recipeId int) (recipe Recipe, err error) {
+	db, err := getDbConnection()
+	if err != nil {
+		return recipe, err
+	}
+
+	recipes := []Recipe{}
+	err = db.Select(&recipes, "SELECT * FROM recipes WHERE id=$1", recipeId)
+	if len(recipes) > 0 {
+		recipe = recipes[0]
+	}
+	return recipe, err
+
+}
+
 func getDbConnection() (*sqlx.DB, error) {
 	//Connect to database
 	db, err := sqlx.Connect("postgres", "postgres://"+Conf.DatabaseConf.User+":"+Conf.DatabaseConf.Password+"@"+Conf.DatabaseConf.Host+":"+strconv.Itoa(Conf.DatabaseConf.Port)+"/"+Conf.DatabaseConf.DatabaseName+"?sslmode=disable")
-
-	//user=Conf.DatabaseConf.User pass=Conf.DatabaseConf.Password dbname=bar sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
