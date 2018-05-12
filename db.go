@@ -12,6 +12,14 @@ import (
 	"github.com/olling/slog"
 )
 
+type Recipe struct {
+	ID int
+	Title string
+	Added string
+	Blog string
+	Instructions string
+}
+
 func InitializeDBMigration() {
 	db, err := getDbConnection()
 	if err != nil {
