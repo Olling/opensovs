@@ -11,6 +11,14 @@ import (
 	"github.com/olling/slog"
 )
 
+type Recipe struct {
+	ID int
+	Title string
+	Added string
+	Blog string
+	Instructions string
+}
+
 func InitializeDBMigration() {
 	db, err := sql.Open("postgres", "postgres://"+Conf.DatabaseConf.User+":"+Conf.DatabaseConf.Password+"@"+Conf.DatabaseConf.Host+":"+strconv.Itoa(Conf.DatabaseConf.Port)+"/"+Conf.DatabaseConf.DatabaseName+"?sslmode=disable")
 	if err != nil {
