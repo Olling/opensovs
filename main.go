@@ -4,8 +4,7 @@ import (
 )
 
 func main() {
-	// Initialize Configuration
 	InitializeConfiguration()
-	InitializeDBMigration()
+	//InitializeDBMigration()
 	InitializeApi()
 }

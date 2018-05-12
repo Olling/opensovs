@@ -27,5 +27,5 @@ func InitializeConfiguration() {
 	slog.PrintDebug("Initializing configuration")
 	flag.Parse()
 	slog.PrintDebug("Configuration Path: " + *ConfigurationPath)
-	ReadJsonFile(*ConfigurationPath,&Conf)
+	ReadJsonFile(*ConfigurationPath, &Conf)
 }
