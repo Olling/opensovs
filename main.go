@@ -13,6 +13,7 @@ func YourHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// Initialize Configuration
 	InitializeConfiguration()
+	InitializeDBMigration()
 
 	r := mux.NewRouter()
 	// Routes consist of a path and a handler function.

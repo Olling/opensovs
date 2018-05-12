@@ -12,7 +12,7 @@ sudo sh -c 'echo "
 		\"Host\": \"localhost\",
 		\"Port\": 5432,
 		\"User\": \"postgres\",
-		\"Password\": \"1234\",
+		\"Password\": \"test\",
 		\"DatabaseName\": \"opensovs\"
 	},
 	\"ApiPort\": 8080
