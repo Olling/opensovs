@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"os"
 	"sync"
 	"io/ioutil"
@@ -49,4 +50,29 @@ func WriteJsonFile(s interface{}, path string) (err error){
 		return err
 	}
 	return nil
+}
+
+func ToJson(s interface{}) (string, error) {
+        bytes, marshalErr := json.MarshalIndent(s,"","\t")
+        //if marshalErr != nil {
+        //        slog.PrintError("Could not convert struct to bytes", marshalErr)
+        //        return "",marshalErr
+        //}
+	return string(bytes), marshalErr
+}
+
+func FromJson(input string,output interface{}) (error) {
+	return json.Unmarshal([]byte(input), &output)
+}
+
+func FromJsonReader(input io.Reader, output interface{}) (error) {
+	decoder := json.NewDecoder(input)
+	err := decoder.Decode(&output)
+
+	//buf := new(bytes.Buffer)
+	//buf.ReadFrom(input)
+	//slog.PrintDebug(buf.String())
+
+	return err
+	//return nil
 }
