@@ -13,10 +13,10 @@ import (
 )
 
 type Recipe struct {
-	ID int
-	Title string
-	Added string
-	Blog string
+	ID           int
+	Title        string
+	Added        string
+	Blog         string
 	Instructions string
 }
 
@@ -42,19 +42,20 @@ func InitializeDBMigration() {
 	m.Up()
 }
 
-func bulkInsertRecipes(unsavedRows []name) error {
+func bulkInsertRecipes(unsavedRows []Recipe) error {
 	db := getDbConnection()
 	defer db.Close()
 
 	valueStrings := make([]string, 0, len(unsavedRows))
-	valueArgs := make([]interface{}, 0, len(unsavedRows)*3)
+	valueArgs := make([]interface{}, 0, len(unsavedRows)*4)
 	for _, post := range unsavedRows {
-		valueStrings = append(valueStrings, "(?, ?, ?)")
-		valueArgs = append(valueArgs, post.name)
-		valueArgs = append(valueArgs, post.name)
-		valueArgs = append(valueArgs, post.name)
+		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d)", i*4+1, i*4+2, i*4+3))
+		valueArgs = append(valueArgs, post.Title)
+		valueArgs = append(valueArgs, post.Added)
+		valueArgs = append(valueArgs, post.Blog)
+		valueArgs = append(valueArgs, post.Instructions)
 	}
-	stmt := fmt.Sprintf("INSERT INTO table (name, name, name) VALUES %s", strings.Join(valueStrings, ","))
+	stmt := fmt.Sprintf("INSERT INTO recipes (title, added, blog_id, instrutions_id) VALUES %s", strings.Join(valueStrings, ","))
 	_, err := db.Exec(stmt, valueArgs...)
 	return err
 }
