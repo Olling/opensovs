@@ -11,6 +11,9 @@ func YourHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Initialize Configuration
+	InitializeConfiguration()
+
 	r := mux.NewRouter()
 	// Routes consist of a path and a handler function.
 	r.HandleFunc("/", YourHandler)
