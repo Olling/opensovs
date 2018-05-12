@@ -17,8 +17,8 @@ type Recipe struct {
 	ID           int    `db:"id"`
 	Title        string `db:"title"`
 	Added        string `db:"added"`
-	Blog         string `db:"blog_id"`
-	Instructions string `db:"instructions_id"`
+	Blog         string `db:"blog"`
+	Instructions string `db:"instructions"`
 }
 
 func InitializeDBMigration() {
@@ -60,7 +60,7 @@ func bulkInsertRecipes(unsavedRows []Recipe) error {
 		valueArgs = append(valueArgs, post.Blog)
 		valueArgs = append(valueArgs, post.Instructions)
 	}
-	stmt := fmt.Sprintf("INSERT INTO recipes (title, added, blog_id, instructions_id) VALUES %s", strings.Join(valueStrings, ","))
+	stmt := fmt.Sprintf("INSERT INTO recipes (title, added, blog, instructions) VALUES %s", strings.Join(valueStrings, ","))
 	_, err := db.Exec(stmt, valueArgs...)
 	return err
 }

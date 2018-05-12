@@ -66,7 +66,7 @@ func handleGetRecipes(w http.ResponseWriter, r *http.Request, ID int) {
 	recipe, err := getRecipeByID(ID)
 	if err != nil {
 		http.Error(w, "Recipe not found", 404)
-		slog.PrintError("Error retrieving recipe with id="+ID+":", err)
+		slog.PrintError("Error retrieving recipe with id="+strconv.Itoa(ID)+":", err)
 	}
 	output, err := ToJson(recipe)
 
