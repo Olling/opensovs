@@ -5,6 +5,6 @@ import (
 
 func main() {
 	InitializeConfiguration()
-	//InitializeDBMigration()
+	InitializeDBMigration()
 	InitializeApi()
 }
