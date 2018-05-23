@@ -31,7 +31,7 @@ func handlerRecipesID(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		handleGetRecipes(w, r, id)
+		handleGetRecipe(w, r, id)
 
 	case "DELETE":
 		err = deleteRecipeById(id)
@@ -51,11 +51,10 @@ func handlerRecipes(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 
 		if err != nil {
-			http.Error(w, "Could not read API input (needed ID)", 400)
-			return
+			handleGetRecipes(w, r)
+		} else {
+			handleGetRecipe(w, r, irecipe.ID)
 		}
-
-		handleGetRecipes(w, r, irecipe.ID)
 
 	case "POST":
 		//fmt.Fprint(w, "POST")
@@ -73,7 +72,24 @@ func handlerRecipes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleGetRecipes(w http.ResponseWriter, r *http.Request, ID int) {
+func handleGetRecipes(w http.ResponseWriter, r *http.Request) {
+	recipes, err := getRecipeList()
+	if err != nil {
+		http.Error(w, "Something went wrong while getting recipes", 500)
+		slog.PrintError("Error getting recipe list", err)
+	}
+	output, err := ToJson(recipes)
+
+	if err != nil {
+		http.Error(w, "Something went wrong while getting recipes", 500)
+		slog.PrintError("Error converting recipes to json", err)
+		return
+	}
+
+	fmt.Fprint(w, output)
+}
+
+func handleGetRecipe(w http.ResponseWriter, r *http.Request, ID int) {
 	recipe, err := getRecipeByID(ID)
 	if err != nil {
 		http.Error(w, "Recipe not found", 404)
