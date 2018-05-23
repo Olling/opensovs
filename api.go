@@ -16,6 +16,8 @@ func InitializeApi() {
 	r.HandleFunc("/api/recipes", handlerRecipes).Methods("GET", "POST")
 	r.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET", "DELETE")
 
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./public/"))))
+
 	// Bind to a port and pass our router in
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(Conf.ApiPort), r))
 }
