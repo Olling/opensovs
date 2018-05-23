@@ -80,6 +80,28 @@ func getRecipeByID(recipeId int) (recipe Recipe, err error) {
 
 }
 
+func deleteRecipeById(recipeId int) (err error) {
+	db, err := getDbConnection()
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("DELETE FROM recipes WHERE id=$1", recipeId)
+	return err
+}
+
+func getRecipeList() (recipeList []Recipe, err error) {
+	db, err := getDbConnection()
+	if err != nil {
+		return recipeList, err
+	}
+
+	recipeList = []Recipe{}
+	err = db.Select(&recipeList, "SELECT id,title FROM recipes")
+	return recipeList, err
+
+}
+
 func getDbConnection() (*sqlx.DB, error) {
 	//Connect to database
 	db, err := sqlx.Connect("postgres", "postgres://"+Conf.DatabaseConf.User+":"+Conf.DatabaseConf.Password+"@"+Conf.DatabaseConf.Host+":"+strconv.Itoa(Conf.DatabaseConf.Port)+"/"+Conf.DatabaseConf.DatabaseName+"?sslmode=disable")

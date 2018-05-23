@@ -14,7 +14,7 @@ func InitializeApi() {
 
 	r.HandleFunc("/api", handler)
 	r.HandleFunc("/api/recipes", handlerRecipes).Methods("GET", "POST")
-	r.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET")
+	r.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET", "DELETE")
 
 	// Bind to a port and pass our router in
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(Conf.ApiPort), r))
@@ -29,7 +29,18 @@ func handlerRecipesID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handleGetRecipes(w, r, id)
+	switch r.Method {
+	case "GET":
+		handleGetRecipes(w, r, id)
+
+	case "DELETE":
+		err = deleteRecipeById(id)
+		if err != nil {
+			http.Error(w, "Error occured while deleting recipe", 500)
+			slog.PrintError("Could not delete recipe with id:", id, ":", err)
+		}
+	}
+
 }
 
 func handlerRecipes(w http.ResponseWriter, r *http.Request) {
