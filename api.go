@@ -12,7 +12,6 @@ func InitializeApiHandlers(router *mux.Router) {
 	router.HandleFunc("/api", handler)
 	router.HandleFunc("/api/recipes", handlerRecipes).Methods("GET", "POST")
 	router.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET", "DELETE")
-
 }
 
 func handlerRecipesID(w http.ResponseWriter, r *http.Request) {

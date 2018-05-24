@@ -7,7 +7,7 @@ import (
 )
 
 func InitializeWeb (router *mux.Router) {
-	router.HandleFunc("/", handlerWebRoot)
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./public/"))))
 }
 
 func handlerWebRoot(w http.ResponseWriter, r *http.Request) {
