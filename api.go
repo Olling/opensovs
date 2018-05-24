@@ -2,22 +2,17 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"net/http"
 	"github.com/gorilla/mux"
 	"github.com/olling/slog"
-	"log"
-	"net/http"
-	"strconv"
 )
 
-func InitializeApi() {
-	r := mux.NewRouter()
+func InitializeApiHandlers(router *mux.Router) {
+	router.HandleFunc("/api", handler)
+	router.HandleFunc("/api/recipes", handlerRecipes).Methods("GET", "POST")
+	router.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET", "DELETE")
 
-	r.HandleFunc("/api", handler)
-	r.HandleFunc("/api/recipes", handlerRecipes).Methods("GET", "POST")
-	r.HandleFunc("/api/recipes/{id}", handlerRecipesID).Methods("GET", "DELETE")
-
-	// Bind to a port and pass our router in
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(Conf.ApiPort), r))
 }
 
 func handlerRecipesID(w http.ResponseWriter, r *http.Request) {
