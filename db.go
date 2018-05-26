@@ -14,11 +14,11 @@ import (
 )
 
 type Recipe struct {
-	ID           int    `db:"id"`
-	Title        string `db:"title"`
-	Added        string `db:"added"`
-	Blog         string `db:"blog"`
-	Instructions string `db:"instructions"`
+	ID           int    `json:"id" db:"id"`
+	Title        string `json:"title" db:"title"`
+	Added        string `json:"added" db:"added"`
+	Blog         string `json:"blog" db:"blog"`
+	Instructions string `json:"instructions" db:"instructions"`
 }
 
 func InitializeDBMigration() {

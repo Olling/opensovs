@@ -20,7 +20,22 @@
 		<button type="button" id="recipeListRefresh">Refresh</button>
 		<table id="recipeList"></table>
 	</div>
+	<div id="recipeAddWrapper">
+		<h2>Add Recipe</h2>
+		<form id="addRecipesForm">
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title">
+			<label for="added">Added</label>
+			<input type="text" id="added" name="added">
+			<label for="blog">Blog</label>
+			<input type="text" id="blog" name="blog">
+			<label for="instructions">Instructions</label>
+			<input type="text" id="instructions" name="instructions">
+			<input type="submit" id="recipeAddSubmit" value="Submit">
+		</form>
+	</div>
 
 	<script src="js/listRecipes.js"></script>
+	<script src="js/addRecipes.js"></script>
 </body>
 </html>

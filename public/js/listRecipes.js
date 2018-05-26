@@ -46,19 +46,19 @@ $(document).ready(function () {
 							jQuery.each(recipes, function (index, item) {
 								$('<tr>\
 										<td>\
-											'+ item.ID + '\
+											'+ item.id + '\
 										</td>\
 										<td>\
-											'+ item.Title + '\
+											'+ item.title + '\
 										</td>\
 										<td>\
-											'+ item.Added + '\
+											'+ item.added + '\
 										</td>\
 										<td>\
-											'+ item.Blog + '\
+											'+ item.blog + '\
 										</td>\
 										<td>\
-											'+ item.Instructions + '\
+											'+ item.instructions + '\
 										</td>\
 									</tr>\
 								').appendTo('#recipeListTableBody');
