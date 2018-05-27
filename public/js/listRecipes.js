@@ -29,6 +29,9 @@ $(document).ready(function () {
 										<th>\
 											Instructions\
 										</th>\
+										<th>\
+											Delete\
+										</th>\
 									</tr>\
 								</thead>\
 								<tbody id="recipeListTableBody">\
@@ -58,6 +61,9 @@ $(document).ready(function () {
 										</td>\
 										<td>\
 											'+ item.instructions + '\
+										</td>\
+										<td>\
+											<label><input name="recipeListDeleteCheck" type="checkbox" value="' + item.id + '"></label>\
 										</td>\
 									</tr>\
 								').appendTo('#recipeListTableBody');

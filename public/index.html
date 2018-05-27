@@ -16,13 +16,16 @@
 		<h1>OpenSovs</h1>
 	</div>
 	<div id="recipeListWrapper">
-		<h2>List Recipes</h2>
-		<button type="button" id="recipeListRefresh">Refresh</button>
-		<table id="recipeList"></table>
+		<form id="recipeListForm" action="javascript:void(0);">
+			<h2>List Recipes</h2>
+			<button type="button" id="recipeListRefresh">Refresh</button>
+			<button type="submit" id="recipeListDelete">Delete</button>
+			<table id="recipeList"></table>
+		</form>
 	</div>
 	<div id="recipeAddWrapper">
 		<h2>Add Recipe</h2>
-		<form id="addRecipesForm">
+		<form id="addRecipesForm" action="javascript:void(0);">
 			<label for="title">Title</label>
 			<input type="text" id="title" name="title">
 			<label for="added">Added</label>
@@ -37,5 +40,6 @@
 
 	<script src="js/listRecipes.js"></script>
 	<script src="js/addRecipes.js"></script>
+	<script src="js/deleteRecipes.js"></script>
 </body>
 </html>
