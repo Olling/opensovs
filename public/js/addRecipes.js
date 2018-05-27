@@ -1,7 +1,6 @@
 $(document).ready(function () {
 	// On submit, parse and call the api with the form data.
-    $("#addRecipesForm").on('click', function () {
-
+    $("#recipeAddSubmit").on('click', function () {
 
     	var recipe = {
     		title:document.forms['addRecipesForm'].elements['title'].value,

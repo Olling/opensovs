@@ -36,13 +36,12 @@ $(document).ready(function () {
 		            		');
 						var isJSON = true;
 						try {
-							var response = JSON.parse(data);
+							var recipes = JSON.parse(data);
 						}
 						catch (err) {
 							isJSON = false
 						}
 						if (isJSON == true) {
-							var recipes = JSON.parse(data);
 							jQuery.each(recipes, function (index, item) {
 								$('<tr>\
 										<td>\
